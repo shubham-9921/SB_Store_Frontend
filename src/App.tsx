@@ -3,9 +3,11 @@ import { Route, Routes } from "react-router-dom";
 import Loader from "./components/Loader";
 import Header from "./components/Header";
 
+
 const Home = lazy(() => import("./pages/Home"));
 const Cart = lazy(() => import("./pages/Cart"));
 const Search = lazy(() => import("./pages/Search"));
+const Shipping = lazy(() => import("./pages/Shipping"));
 
 // Admin Routes
 const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
@@ -34,8 +36,11 @@ const App = () => {
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route element={<Home />} path="/"></Route>
-          <Route element={<Search />} path="search"></Route>
-          <Route element={<Cart />} path="cart"></Route>
+          <Route element={<Search />} path="/search"></Route>
+          <Route element={<Cart />} path="/cart"></Route>
+
+          
+          <Route element={<Shipping />} path="/shipping"></Route>
 
           {/* Admin Routes */}
 
