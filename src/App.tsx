@@ -2,12 +2,14 @@ import React, { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import Loader from "./components/Loader";
 import Header from "./components/Header";
-
+import { Toaster } from "react-hot-toast";
 
 const Home = lazy(() => import("./pages/Home"));
 const Cart = lazy(() => import("./pages/Cart"));
 const Search = lazy(() => import("./pages/Search"));
 const Shipping = lazy(() => import("./pages/Shipping"));
+const Orders = lazy(() => import("./pages/Orders"));
+const Login = lazy(() => import("./pages/Login"));
 
 // Admin Routes
 const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
@@ -39,8 +41,14 @@ const App = () => {
           <Route element={<Search />} path="/search"></Route>
           <Route element={<Cart />} path="/cart"></Route>
 
-          
-          <Route element={<Shipping />} path="/shipping"></Route>
+          {/* not logged in use Route */}
+          <Route element={<Login />} path="/login"></Route>
+
+          {/* Logged in as user */}
+          <Route>
+            <Route element={<Shipping />} path="/shipping"></Route>
+            <Route element={<Orders />} path="/orders"></Route>
+          </Route>
 
           {/* Admin Routes */}
 
@@ -82,6 +90,8 @@ const App = () => {
           {/* </Route> */}
         </Routes>
       </Suspense>
+
+      <Toaster  position="bottom-center"/>
     </>
   );
 };

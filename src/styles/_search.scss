@@ -1,0 +1,71 @@
+.productSearchPage {
+  padding: 2rem;
+  @include flex(row, flex-start, stretch, 2rem);
+  min-height: calc(100vh - 6vh);
+  > aside {
+    min-width: 20rem;
+    @include baseShadow;
+    @include flex(column, flex-start, stretch, 0.5rem);
+
+    padding: 2rem;
+
+    > h2 {
+      @include heading;
+    }
+
+    > div {
+      > input,
+      > select {
+        @include inputStyle(
+          100%,
+          1rem,
+          white,
+          1px solid rgba(154, 154, 154, 0.38)
+        );
+
+        border-radius: 10px;
+        margin: 0.5rem;
+      }
+    }
+  }
+
+  > main {
+    width: 100%;
+    padding: 0 2rem;
+    @include heading;
+    > input {
+      @include inputStyle(50%, 1rem, white);
+      display: block;
+      border-radius: 10px;
+      box-shadow: 0 0 5px 1px gray;
+      margin: 1rem;
+      font-size: 1.2rem;
+    }
+
+    .searchProductLis {
+      @include flex(row, flex-start, flex-start, 1rem);
+      flex-wrap: wrap;
+      height: calc(100% - 10rem);
+      overflow-y: auto;
+    }
+
+    > article {
+      @include flex;
+      > button {
+        @include flex;
+        @include baseBtn(0.5rem 1rem, $color3, $color1);
+        border-radius: 10px;
+        transition: all 0.2s ease;
+        &:hover {
+          opacity: 0.8;
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+          color: $color2;
+          opacity: 0.8;
+        }
+      }
+    }
+  }
+}

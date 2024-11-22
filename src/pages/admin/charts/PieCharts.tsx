@@ -1,7 +1,7 @@
 import React from "react";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { DoughnutChart, PieChart } from "../../../components/admin/Charts";
-import { categories } from "../../assets/data.json";
+import { categories } from "../../../assets/data.json";
 
 const PieCharts = () => {
   return (
