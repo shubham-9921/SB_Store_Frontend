@@ -1,8 +1,24 @@
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { SkeletonLoader } from "../components/Loader";
 import ProductCard from "../components/ProductCard";
+import { useLatestProductsQuery } from "../redux/api/productApi";
+import { addToCart } from "../redux/reducer/cartReducer";
+import { CartItemsType } from "../types/types";
 
 const Home = () => {
-  const addToCartHandler = () => {};
+  const dispatch = useDispatch();
+
+  const addToCartHandler = (cartItem: CartItemsType) => {
+    if (cartItem.stock < 1) return toast.error("Out of Stock !");
+    dispatch(addToCart(cartItem));
+    toast.success("Product Added to Cart");
+  };
+
+  const { data, isLoading } = useLatestProductsQuery("");
+
+  // if (isError) toast.error("Canno get Product");
   return (
     <>
       <div className="home">
@@ -16,14 +32,21 @@ const Home = () => {
         </h1>
 
         <main>
-          <ProductCard
-            productId="123"
-            name="Macbook"
-            price={1000}
-            stock={10}
-            photo="https://images.pexels.com/photos/159886/pexels-photo-159886.jpeg?auto=compress&cs=tinysrgb&w=600"
-            handler={addToCartHandler}
-          />
+          {isLoading ? (
+            <SkeletonLoader length={20} width="80vw" />
+          ) : (
+            data?.products.map((p) => (
+              <ProductCard
+                key={p._id}
+                productId={p._id}
+                name={p.name}
+                price={p.price}
+                stock={p.stock}
+                photo={p.photo}
+                handler={addToCartHandler}
+              />
+            ))
+          )}
         </main>
       </div>
     </>

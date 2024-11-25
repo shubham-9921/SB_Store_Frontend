@@ -7,13 +7,26 @@ import {
   FaUser,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { UserType } from "../types/types";
+import toast from "react-hot-toast";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
 
-const user = { _id: "", role: "" };
+interface PropType {
+  user: UserType | null;
+}
 
-const Header = () => {
+const Header = ({ user }: PropType) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const logoutHandler = () => {
+  const logoutHandler = async () => {
+    try {
+      await signOut(auth);
+      toast.success("Signed Out Successfully");
+    } catch (error) {
+      toast.error("Sign Ou Failed");
+      console.log(error);
+    }
     setIsOpen(false);
   };
   return (

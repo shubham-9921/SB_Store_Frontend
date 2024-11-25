@@ -1,8 +1,14 @@
-import React, { ReactElement, useCallback, useState } from "react";
+import React, { ReactElement, useCallback, useEffect, useState } from "react";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import { Column } from "react-table";
 import TableHOC from "../../components/admin/TableHOC";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { UserInitialReducer } from "../../types/reducerTypes";
+import { useAllOrdersQuery } from "../../redux/api/orderApi";
+import toast from "react-hot-toast";
+import { CustomError } from "../../types/apiTypes";
+import { SkeletonLoader } from "../../components/Loader";
 
 interface DataType {
   user: string;
@@ -40,51 +46,62 @@ const columns: Column<DataType>[] = [
   },
 ];
 
-const arr: DataType[] = [
-  {
-    user: "Shubham",
-    amount: 1000,
-    discount: 100,
-    qunatity: 3,
-    status: <span className="red">Processing</span>,
-    action: <Link to="/admin/transactions/dsfj">Manage</Link>,
-  },
-  {
-    user: "Shubham",
-    amount: 1000,
-    discount: 100,
-    qunatity: 3,
-    status: <span className="red">Processing</span>,
-    action: <Link to="/admin/transactions/dsfj">Manage</Link>,
-  },
-  {
-    user: "Shubham",
-    amount: 1000,
-    discount: 100,
-    qunatity: 3,
-    status: <span className="red">Processing</span>,
-    action: <Link to="/admin/transactions/dsfj">Manage</Link>,
-  },
-];
 const Transactions: React.FC = () => {
-  const [data] = useState<DataType[]>(arr);
-
-  const Table = useCallback(
-    TableHOC<DataType>(
-      columns,
-      data,
-      "dashboardProductTable",
-      "Transaction",
-      true
-    ),
-    []
+  const { user } = useSelector(
+    (state: { userReducer: UserInitialReducer }) => state.userReducer
   );
+
+  const { data, isLoading, isError, error } = useAllOrdersQuery(
+    user?._id as string
+  );
+
+  const [row, setRow] = useState<DataType[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      setRow(
+        data.orders.map((i) => ({
+          user: i.user.name,
+          amount: i.total,
+          discount: i.discount,
+          qunatity: i.orderItems.length,
+          status: (
+            <span
+              className={
+                i.status === "Processing"
+                  ? "red"
+                  : i.status == "Shipped"
+                  ? "green"
+                  : "purple"
+              }
+            >
+              {i.status}
+            </span>
+          ),
+          action: <Link to={`/admin/transactions/${i._id}`}>Manage</Link>,
+        }))
+      );
+    }
+  }, [data]);
+
+  const Table = TableHOC<DataType>(
+    columns,
+    row,
+    "dashboardProductTable",
+    "Transaction",
+    true
+  )();
+
+  if (isError) {
+    const err = error as CustomError;
+    toast.error(err.data.message);
+  }
   return (
     <>
       {" "}
       <div className="adminContainer">
         <AdminSidebar />
-        <main>{Table()}</main>
+        <main>{isLoading ? <SkeletonLoader length={20} /> : Table}</main>
       </div>
     </>
   );

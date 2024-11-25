@@ -1,9 +1,16 @@
-import React, { ReactElement, useCallback, useState } from "react";
+import React, { ReactElement, useCallback, useEffect, useState } from "react";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
 import { Column } from "react-table";
 import { Link } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
+import { useAllProductsQuery } from "../../redux/api/productApi";
+import { server } from "../../redux/store";
+import { SkeletonLoader } from "../../components/Loader";
+import { useSelector } from "react-redux";
+import { UserInitialReducer } from "../../types/reducerTypes";
+import { CustomError } from "../../types/apiTypes";
+import toast from "react-hot-toast";
 
 interface TableDataType {
   photo: ReactElement;
@@ -36,86 +43,48 @@ const columns: Column<TableDataType>[] = [
   },
 ];
 
-const img =
-  "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8c2hvZXN8ZW58MHx8MHx8&w=1000&q=804";
-
-const img2 = "https://m.media-amazon.com/images/I/514T0SvwkHL._SL1500_.jpg";
-
-const arr: TableDataType[] = [
-  {
-    photo: <img src={img} alt="Shoes" />,
-    name: "Puma Shoes Air Jordan Cook Nigga 2023",
-    price: 690,
-    stock: 3,
-    action: <Link to="/admin/products/sajknaskd">Manage</Link>,
-  },
-
-  {
-    photo: <img src={img2} alt="Shoes" />,
-    name: "Macbook",
-    price: 232223,
-    stock: 213,
-    action: <Link to="/admin/products/sdaskdnkasjdn">Manage</Link>,
-  },
-  {
-    photo: <img src={img} alt="Shoes" />,
-    name: "Puma Shoes Air Jordan Cook Nigga 2023",
-    price: 690,
-    stock: 3,
-    action: <Link to="/admin/products/sajknaskd">Manage</Link>,
-  },
-
-  {
-    photo: <img src={img2} alt="Shoes" />,
-    name: "Macbook",
-    price: 232223,
-    stock: 213,
-    action: <Link to="/admin/products/sdaskdnkasjdn">Manage</Link>,
-  },
-  {
-    photo: <img src={img} alt="Shoes" />,
-    name: "Puma Shoes Air Jordan Cook Nigga 2023",
-    price: 690,
-    stock: 3,
-    action: <Link to="/admin/products/sajknaskd">Manage</Link>,
-  },
-
-  {
-    photo: <img src={img2} alt="Shoes" />,
-    name: "Macbook",
-    price: 232223,
-    stock: 213,
-    action: <Link to="/admin/products/sdaskdnkasjdn">Manage</Link>,
-  },
-  {
-    photo: <img src={img2} alt="Shoes" />,
-    name: "Macbook",
-    price: 232223,
-    stock: 213,
-    action: <Link to="/admin/products/sdaskdnkasjdn">Manage</Link>,
-  },
-];
 const Products: React.FC = () => {
-  const [data] = useState<TableDataType[]>(arr);
-
-  const Table = useCallback(
-    TableHOC<TableDataType>(
-      columns,
-      data,
-      "dashboardProductTable",
-      "Products",
-      true
-    ),
-    []
+  const { user } = useSelector(
+    (state: { userReducer: UserInitialReducer }) => state.userReducer
   );
+
+  const { data, isLoading, isError, error } = useAllProductsQuery(user?._id!);
+
+  const [row, setRow] = useState<TableDataType[]>([]);
+
+  if (isError) {
+    const err = error as CustomError;
+    toast.error(err.data.message);
+  }
+  useEffect(() => {
+    if (data) {
+      setRow(
+        data.products.map((i) => ({
+          photo: <img src={`${server}/${i.photo}`} />,
+          name: i.name,
+          price: i.price,
+          stock: i.stock,
+          action: <Link to={`/admin/products/${i._id}`}>Manage</Link>,
+        }))
+      );
+    }
+  }, [data]);
+
+  const Table = TableHOC<TableDataType>(
+    columns,
+    row,
+    "dashboardProductTable",
+    "Products",
+    true
+  )();
+
   return (
     <>
       {" "}
       <div className="adminContainer">
         <AdminSidebar />
-        <main>{Table()}</main>
-
-        <Link to={"/admin/products/new"} className="addProductBtn">
+        <main>{isLoading ? <SkeletonLoader length={20} /> : Table}</main>
+        <Link to="/admin/products/new" className="addProductBtn">
           <FaPlus></FaPlus>
         </Link>
       </div>

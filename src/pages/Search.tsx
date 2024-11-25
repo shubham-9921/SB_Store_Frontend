@@ -1,7 +1,23 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { SkeletonLoader } from "../components/Loader";
 import ProductCard from "../components/ProductCard";
+import {
+  useCategoriesQuery,
+  useSearchProducstsQuery,
+} from "../redux/api/productApi";
+import { CustomError } from "../types/apiTypes";
+import { CartItemsType } from "../types/types";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/reducer/cartReducer";
 
 const Search = () => {
+  const {
+    data: categories,
+    isLoading: categoryLoading,
+    error,
+    isError,
+  } = useCategoriesQuery("");
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("");
   const [category, setCategory] = useState("");
@@ -9,10 +25,38 @@ const Search = () => {
   const [page, setPage] = useState(1);
   // const [isNextPage, setIsNextPage] = useState(false);
 
-  const isNextPage = page < 4;
-  const isPrevPage = page > 1;
+  const {
+    data: searchedData,
+    isLoading: productLoading,
+    isError: isProductError,
+    error: productError,
+  } = useSearchProducstsQuery({
+    search,
+    sort,
+    price: maxPrice,
+    page,
+    category,
+  });
+  const totalPages = searchedData?.totalPages;
 
-  const addToCartHandler = () => {};
+  const isNextPage = page < totalPages!;
+  const isPrevPage = page > 1;
+  const dispatch = useDispatch();
+
+  const addToCartHandler = (cartItem: CartItemsType) => {
+    if (cartItem.stock < 1) return toast.error("Out of Stock !");
+    dispatch(addToCart(cartItem));
+    toast.success("Product Added to Cart");
+  };
+
+  if (isError) {
+    const err = error as CustomError;
+    toast.error(err.data.message);
+  }
+  if (isProductError) {
+    const err = productError as CustomError;
+    toast.error(err.data.message);
+  }
 
   return (
     <div className="productSearchPage">
@@ -53,10 +97,18 @@ const Search = () => {
             onChange={(e) => setCategory(e.target.value)}
             id=""
           >
-            <option selected> All</option>
-            <option value="camera"> Camera </option>
-            <option value="laptop">Laptop</option>
-            <option value="mobile">Mobile</option>
+            <option selected value="">
+              {" "}
+              All
+            </option>
+
+            {!categoryLoading &&
+              categories?.category.map((c) => (
+                <option key={c} value={c}>
+                  {" "}
+                  {c.toUpperCase()}{" "}
+                </option>
+              ))}
           </select>
         </div>
       </aside>
@@ -70,121 +122,43 @@ const Search = () => {
           onChange={(e) => setSearch(e.target.value)}
         />
         <div className="searchProductLis">
-          <ProductCard
-            productId="123"
-            name="Macbook"
-            price={1000}
-            stock={10}
-            photo="https://images.pexels.com/photos/159886/pexels-photo-159886.jpeg?auto=compress&cs=tinysrgb&w=600"
-            handler={addToCartHandler}
-          />
-          <ProductCard
-            productId="123"
-            name="Macbook"
-            price={1000}
-            stock={10}
-            photo="https://images.pexels.com/photos/159886/pexels-photo-159886.jpeg?auto=compress&cs=tinysrgb&w=600"
-            handler={addToCartHandler}
-          />
-          <ProductCard
-            productId="123"
-            name="Macbook"
-            price={1000}
-            stock={10}
-            photo="https://images.pexels.com/photos/159886/pexels-photo-159886.jpeg?auto=compress&cs=tinysrgb&w=600"
-            handler={addToCartHandler}
-          />
-          <ProductCard
-            productId="123"
-            name="Macbook"
-            price={1000}
-            stock={10}
-            photo="https://images.pexels.com/photos/159886/pexels-photo-159886.jpeg?auto=compress&cs=tinysrgb&w=600"
-            handler={addToCartHandler}
-          />
-          <ProductCard
-            productId="123"
-            name="Macbook"
-            price={1000}
-            stock={10}
-            photo="https://images.pexels.com/photos/159886/pexels-photo-159886.jpeg?auto=compress&cs=tinysrgb&w=600"
-            handler={addToCartHandler}
-          />
-          <ProductCard
-            productId="123"
-            name="Macbook"
-            price={1000}
-            stock={10}
-            photo="https://images.pexels.com/photos/159886/pexels-photo-159886.jpeg?auto=compress&cs=tinysrgb&w=600"
-            handler={addToCartHandler}
-          />
-          <ProductCard
-            productId="123"
-            name="Macbook"
-            price={1000}
-            stock={10}
-            photo="https://images.pexels.com/photos/159886/pexels-photo-159886.jpeg?auto=compress&cs=tinysrgb&w=600"
-            handler={addToCartHandler}
-          />
-          <ProductCard
-            productId="123"
-            name="Macbook"
-            price={1000}
-            stock={10}
-            photo="https://images.pexels.com/photos/159886/pexels-photo-159886.jpeg?auto=compress&cs=tinysrgb&w=600"
-            handler={addToCartHandler}
-          />
-          <ProductCard
-            productId="123"
-            name="Macbook"
-            price={1000}
-            stock={10}
-            photo="https://images.pexels.com/photos/159886/pexels-photo-159886.jpeg?auto=compress&cs=tinysrgb&w=600"
-            handler={addToCartHandler}
-          />
-          <ProductCard
-            productId="123"
-            name="Macbook"
-            price={1000}
-            stock={10}
-            photo="https://images.pexels.com/photos/159886/pexels-photo-159886.jpeg?auto=compress&cs=tinysrgb&w=600"
-            handler={addToCartHandler}
-          />
-          <ProductCard
-            productId="123"
-            name="Macbook"
-            price={1000}
-            stock={10}
-            photo="https://images.pexels.com/photos/159886/pexels-photo-159886.jpeg?auto=compress&cs=tinysrgb&w=600"
-            handler={addToCartHandler}
-          />
-          <ProductCard
-            productId="123"
-            name="Macbook"
-            price={1000}
-            stock={10}
-            photo="https://images.pexels.com/photos/159886/pexels-photo-159886.jpeg?auto=compress&cs=tinysrgb&w=600"
-            handler={addToCartHandler}
-          />
+          {productLoading ? (
+            <SkeletonLoader length={10} />
+          ) : (
+            searchedData &&
+            searchedData?.products.map((p) => (
+              <ProductCard
+                key={p._id}
+                productId={p._id}
+                name={p.name}
+                price={p.price}
+                stock={p.stock}
+                photo={p.photo}
+                handler={addToCartHandler}
+              />
+            ))
+          )}
         </div>
 
-        <article>
-          <button
-            disabled={!isPrevPage}
-            onClick={() => setPage((prev) => prev - 1)}
-          >
-            Prev
-          </button>
-          <span>
-            {page} of {4}
-          </span>
-          <button
-            disabled={!isNextPage}
-            onClick={() => setPage((prev) => prev + 1)}
-          >
-            Next
-          </button>
-        </article>
+        {searchedData && searchedData?.totalPages > 1 && (
+          <article>
+            <button
+              disabled={!isPrevPage}
+              onClick={() => setPage((prev) => prev - 1)}
+            >
+              Prev
+            </button>
+            <span>
+              {page} of {searchedData.totalPages}
+            </span>
+            <button
+              disabled={!isNextPage}
+              onClick={() => setPage((prev) => prev + 1)}
+            >
+              Next
+            </button>
+          </article>
+        )}
       </main>
     </div>
   );
