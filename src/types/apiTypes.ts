@@ -1,8 +1,10 @@
+import { User } from "firebase/auth";
 import {
   CartItemsType,
   OrderType,
   ProductType,
   ShippingInfoType,
+  StatsArrType,
   UserType,
 } from "./types";
 
@@ -70,12 +72,13 @@ export type NewOrderType = {
   tax: number;
   shippingCharges: number;
   discount: number;
-  userId: string;
+  user: string;
+  total: number;
 };
 
 export type AllOrderResponseType = {
   success: boolean;
-  orders: OrderType[];
+  order: OrderType[];
 };
 export type UpdateOrderResponseType = {
   userId: string;
@@ -89,4 +92,21 @@ export type DeleteOrderResponseType = {
 export type OrderDetailResponseType = {
   success: boolean;
   order: OrderType;
+};
+
+export type AllUserResponseType = {
+  success: boolean;
+  users: User[];
+};
+
+export type DeleteUserReqType = {
+  userId: string;
+  id: string;
+};
+
+// dashboard
+
+export type StatsResponseType = {
+  success: boolean;
+  stats: StatsArrType;
 };

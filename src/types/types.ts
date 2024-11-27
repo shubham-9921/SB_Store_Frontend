@@ -39,7 +39,7 @@ export type OrderItemType = Omit<CartItemsType, "stock"> & {
 };
 
 export type OrderType = {
-  orderItems: any;
+  orderItems: [];
   orderItem: OrderItemType[];
   shippingInfo: ShippingInfoType;
   subtotal: number;
@@ -53,4 +53,48 @@ export type OrderType = {
     _id: string;
   };
   _id: string;
+};
+
+// dashboard
+
+export type changeInPercent = {
+  revenue: number;
+  product: number;
+  order: number;
+  user: number;
+};
+export type countType = {
+  revenue: number;
+  products: number;
+  users: number;
+  orders: number;
+};
+
+export type orderChartType = {
+  orderMonthsCount: number[];
+  orderMonthsRevenue: number[];
+};
+
+export type StatsType = {
+  changeInPercent: changeInPercent;
+};
+export type GenderType = {
+  male: number;
+  female: number;
+};
+export type modifiedLatestTransactionsType = {
+  _id: string;
+  discount: number;
+  amount: number;
+  qunatity: number;
+  status?: "Processing" | "Shipped" | "Delivered";
+};
+export type StatsArrType = {
+  changeInPercent: changeInPercent;
+  stats: StatsType[];
+  count: countType;
+  chart: orderChartType;
+  categoryCount: Record<string, number>[];
+  gender: GenderType;
+  modifiedLatestTransactions: modifiedLatestTransactionsType[];
 };

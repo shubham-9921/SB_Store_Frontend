@@ -71,7 +71,9 @@ const Orders = () => {
                   ? "green"
                   : "purple"
               }
-            ></span>
+            >
+              {i.status}
+            </span>
           ),
           action: <Link to={`/order/${i._id}`}>View</Link>,
         }))

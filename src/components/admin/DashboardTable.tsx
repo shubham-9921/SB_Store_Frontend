@@ -1,8 +1,8 @@
 import { Column } from "react-table";
 import TableHOC from "./TableHOC";
 
-interface TableProps {
-  id: string;
+export interface TableProps {
+  _id: string;
   quantity: number;
   discount: number;
   amount: number;
@@ -12,7 +12,7 @@ interface TableProps {
 const columns: Column<TableProps>[] = [
   {
     Header: "ID",
-    accessor: "id",
+    accessor: "_id",
   },
   {
     Header: "Quantity",
@@ -32,7 +32,7 @@ const columns: Column<TableProps>[] = [
   },
 ];
 
-const DashboardTable = ({ data = [] }: { data: TableProps[] }) => {
+const DashboardTable = ({ data }: { data: TableProps[] }) => {
   return TableHOC<TableProps>(
     columns,
     data,

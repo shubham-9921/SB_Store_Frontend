@@ -57,9 +57,7 @@ const App = () => {
       }
     });
   }, []);
-  return loading ? (
-    <Loader />
-  ) : (
+  return (
     <>
       {/* Header */}
       <Header user={user} />

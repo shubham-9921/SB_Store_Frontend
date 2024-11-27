@@ -1,16 +1,16 @@
-import React, { ReactElement, useCallback, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { FaPlus } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { Column } from "react-table";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
-import { Column } from "react-table";
-import { Link } from "react-router-dom";
-import { FaPlus } from "react-icons/fa";
+import { SkeletonLoader } from "../../components/Loader";
 import { useAllProductsQuery } from "../../redux/api/productApi";
 import { server } from "../../redux/store";
-import { SkeletonLoader } from "../../components/Loader";
-import { useSelector } from "react-redux";
-import { UserInitialReducer } from "../../types/reducerTypes";
 import { CustomError } from "../../types/apiTypes";
-import toast from "react-hot-toast";
+import { UserInitialReducer } from "../../types/reducerTypes";
 
 interface TableDataType {
   photo: ReactElement;
@@ -48,7 +48,9 @@ const Products: React.FC = () => {
     (state: { userReducer: UserInitialReducer }) => state.userReducer
   );
 
-  const { data, isLoading, isError, error } = useAllProductsQuery(user?._id!);
+  const { data, isLoading, isError, error } = useAllProductsQuery(
+    user?._id as string
+  );
 
   const [row, setRow] = useState<TableDataType[]>([]);
 
