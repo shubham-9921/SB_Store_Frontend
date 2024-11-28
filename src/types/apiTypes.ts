@@ -2,6 +2,7 @@ import { User } from "firebase/auth";
 import {
   CartItemsType,
   ChartType,
+  LineChartType,
   OrderType,
   PieChartType,
   ProductType,
@@ -122,4 +123,8 @@ export type BarResponseType = {
 export type PieResponseType = {
   success: boolean;
   charts: PieChartType;
+};
+export type LineResponseType = {
+  success: boolean;
+  charts: LineChartType;
 };

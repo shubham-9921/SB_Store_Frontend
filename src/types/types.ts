@@ -135,3 +135,10 @@ export type PieChartType = {
   userAgeGroup: userAgeGroupType;
   userDistribution: userDistributionType;
 };
+
+export type LineChartType = {
+  discount: number[];
+  products: number[];
+  revenue: number[];
+  users: number[];
+};

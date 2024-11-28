@@ -14,7 +14,26 @@ const PieCharts = () => {
   );
 
   const { data, isLoading, isError, error } = usePiesQuery(user._id as string);
-  const chart = data?.charts!;
+
+  const Processing = data?.charts?.Processing || 0;
+  const Shipped = data?.charts?.Shipped || 0;
+  const Delivered = data?.charts?.Delivered || 0;
+  const categories = data?.charts?.productCategory || [];
+  const inStock = data?.charts.stockAvailablity.inStock || 0;
+  const outStock = data?.charts.stockAvailablity.outStock || 0;
+
+  const burnt = data?.charts.revenueDistribution.burnt || 0;
+  const marketingCost = data?.charts.revenueDistribution.marketingCost || 0;
+  const productCost = data?.charts.revenueDistribution.productCost || 0;
+  const discount = data?.charts.revenueDistribution.discount || 0;
+  const netMargin = data?.charts.revenueDistribution.netMargin || 0;
+
+  const teen = data?.charts.userAgeGroup.teen || 0;
+  const adult = data?.charts.userAgeGroup.adult || 0;
+  const old = data?.charts.userAgeGroup.old || 0;
+
+  const adminUsers = data?.charts.userDistribution.adminUsers || 0;
+  const customerUsers = data?.charts.userDistribution.customerUsers || 0;
 
   if (isError) {
     const err = error as CustomError;
@@ -35,7 +54,7 @@ const PieCharts = () => {
               <div>
                 <PieChart
                   labels={["Processing", "Shipped", "Delivered"]}
-                  data={[chart?.Processing, chart?.Shipped, chart?.Delivered]}
+                  data={[Processing, Shipped, Delivered]}
                   bgColor={["#4A628A", "#7AB2D3", "#B9E5E8"]}
                   offset={[0, 0, 40]}
                 />
@@ -46,21 +65,16 @@ const PieCharts = () => {
             <section>
               <div>
                 <DoughnutChart
-                  labels={chart.productCategory.map((i: any) => {
-                    const [heading, value] = Object.entries(i)[0];
-
-                    return heading;
-                  })}
-                  data={chart.productCategory.map((i: any) => {
-                    const [heading, value] = Object.entries(i)[0];
-
-                    return value;
-                  })}
+                  labels={categories.map((i) => Object.keys(i)[0])}
+                  data={categories.map((i) => Object.values(i)[0])}
                   bgColor={categories.map(
-                    (i: any) => `hsl(${i.value * 4},80%,50%)`
+                    (i) =>
+                      `hsl(${Object.values(i)[0] * 4}, ${
+                        Object.values(i)[0]
+                      }%, 50%)`
                   )}
                   legends={false}
-                  offset={[0, 0, 40]}
+                  offset={[0, 0, 0, 80]}
                 />
               </div>
 
@@ -70,10 +84,7 @@ const PieCharts = () => {
               <div>
                 <DoughnutChart
                   labels={["InStock", "Out Of Stock"]}
-                  data={[
-                    chart.stockAvailablity.inStock,
-                    chart.stockAvailablity.outStock,
-                  ]}
+                  data={[inStock, outStock]}
                   bgColor={["#FF204E", "#A13333"]}
                   legends={false}
                   offset={[0, 80]}
@@ -94,11 +105,11 @@ const PieCharts = () => {
                     "Net Margin",
                   ]}
                   data={[
-                    chart.revenueDistribution.marketingCost,
-                    chart.revenueDistribution.discount,
-                    chart.revenueDistribution.burnt,
-                    chart.revenueDistribution.productCost,
-                    chart.revenueDistribution.netMargin,
+                    marketingCost,
+                    discount,
+                    burnt,
+                    productCost,
+                    netMargin,
                   ]}
                   bgColor={[
                     "#9ADCFF",
@@ -123,11 +134,7 @@ const PieCharts = () => {
                     "Adult(20 - 40)",
                     "Older (above 40)",
                   ]}
-                  data={[
-                    chart.userAgeGroup.teen,
-                    chart.userAgeGroup.adult,
-                    chart.userAgeGroup.old,
-                  ]}
+                  data={[teen, adult, old]}
                   bgColor={["#7AB2D3", "#FF487E", "#4A628A"]}
                   offset={[0, 0, 50]}
                 />
@@ -139,10 +146,7 @@ const PieCharts = () => {
               <div>
                 <DoughnutChart
                   labels={["Admin", "Customer"]}
-                  data={[
-                    chart.userDistribution.adminUsers,
-                    chart.userDistribution.customerUsers,
-                  ]}
+                  data={[adminUsers, customerUsers]}
                   bgColor={["#352F44", "#B9B4C7"]}
                   offset={[0, 80]}
                 />

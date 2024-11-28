@@ -10,6 +10,8 @@ import { userExist, userNotExist } from "./redux/reducer/userReducer";
 import { getUser } from "./redux/api/userApi";
 import { UserInitialReducer } from "./types/reducerTypes";
 import ProtectedRoutes from "./components/ProtectedRoutes";
+import { getLastMonths } from "./utils/feature";
+import { BrowserRouter } from "react-router-dom";
 
 const Home = lazy(() => import("./pages/Home"));
 const Cart = lazy(() => import("./pages/Cart"));
@@ -57,8 +59,10 @@ const App = () => {
       }
     });
   }, []);
-  return (
-    <>
+  return loading ? (
+    <Loader />
+  ) : (
+    <BrowserRouter>
       {/* Header */}
       <Header user={user} />
       <Suspense fallback={<Loader />}>
@@ -129,7 +133,7 @@ const App = () => {
       </Suspense>
 
       <Toaster position="bottom-center" />
-    </>
+    </BrowserRouter>
   );
 };
 
