@@ -1,6 +1,11 @@
 import React from "react";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { LineChart } from "../../../components/admin/Charts";
+import { useSelector } from "react-redux";
+import { CustomRootState } from "../../../redux/store";
+import { useLineQuery } from "../../../redux/api/dashboardApi";
+import { CustomError } from "../../../types/apiTypes";
+import toast from "react-hot-toast";
 
 const months = [
   "January",
@@ -17,6 +22,18 @@ const months = [
   "December",
 ];
 const LineCharts = () => {
+  const { user } = useSelector(
+    (state: { userReducer: CustomRootState }) => state.userReducer
+  );
+
+  const { data, isLoading, isError, error } = useLineQuery(user._id as string);
+  const chart = data?.charts;
+
+  if (isError) {
+    const err = error as CustomError;
+    toast.error(err.data.message);
+  }
+
   return (
     <>
       <div className="adminContainer">
@@ -24,7 +41,7 @@ const LineCharts = () => {
         <main className="chartContainer">
           <section>
             <LineChart
-              data={[25, 74, 39, 25, 78, 88, 7, 87, 87, 68, 78, 98, 53]}
+              data={chart?.users}
               label="Users"
               borderColor="#2D9596"
               backgroundColor="#9AD0C2"
@@ -34,9 +51,7 @@ const LineCharts = () => {
           </section>
           <section>
             <LineChart
-              data={[
-                250, 740, 390, 200, 700, 880, 100, 800, 860, 680, 780, 908, 503,
-              ]}
+              data={chart?.revenue}
               label="Revenue"
               borderColor="#CB9DF0"
               backgroundColor="#F0C1E1"
@@ -46,10 +61,7 @@ const LineCharts = () => {
           </section>
           <section>
             <LineChart
-              data={[
-                2500, 7400, 3900, 2500, 7800, 8800, 700, 8700, 8700, 6800, 7800,
-                9008, 5003,
-              ]}
+              data={chart?.products}
               label="Products"
               borderColor="#FFA62F"
               backgroundColor="#FFC96F"
@@ -59,9 +71,7 @@ const LineCharts = () => {
           </section>
           <section>
             <LineChart
-              data={[
-                250, 740, 390, 250, 780, 800, 70, 70, 870, 600, 780, 90, 503,
-              ]}
+              data={chart?.discount}
               label="Discount"
               borderColor="#CAF4FF"
               backgroundColor="#A0DEFF"

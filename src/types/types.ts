@@ -98,3 +98,40 @@ export type StatsArrType = {
   gender: GenderType;
   modifiedLatestTransactions: modifiedLatestTransactionsType[];
 };
+
+export type ChartType = {
+  orders: number[];
+  products: number[];
+  users: number[];
+};
+
+export type revenueSitType = {
+  burnt: number;
+  discount: number;
+  marketingCost: number;
+  netMargin: number;
+  productCost: number;
+};
+export type stockAvailablityType = {
+  inStock: number;
+  outStock: number;
+};
+export type userAgeGroupType = {
+  adult: number;
+  old: number;
+  teen: number;
+};
+export type userDistributionType = {
+  adminUsers: number;
+  customerUsers: number;
+};
+export type PieChartType = {
+  Delivered: number;
+  Processing: number;
+  Shipped: number;
+  productCategory: Record<string, number>[];
+  revenueDistribution: revenueSitType;
+  stockAvailablity: stockAvailablityType;
+  userAgeGroup: userAgeGroupType;
+  userDistribution: userDistributionType;
+};

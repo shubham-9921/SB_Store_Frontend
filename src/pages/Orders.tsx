@@ -54,6 +54,8 @@ const Orders = () => {
     user?._id as string
   );
 
+  const [rows, setRow] = useState<DataType[]>([]);
+
   useEffect(() => {
     if (data) {
       setRow(
@@ -81,7 +83,6 @@ const Orders = () => {
     }
   }, [data]);
 
-  const [rows, setRow] = useState<DataType[]>([]);
   const Table = TableHOC<DataType>(
     columns,
     rows,

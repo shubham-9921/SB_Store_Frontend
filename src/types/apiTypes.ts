@@ -1,7 +1,9 @@
 import { User } from "firebase/auth";
 import {
   CartItemsType,
+  ChartType,
   OrderType,
+  PieChartType,
   ProductType,
   ShippingInfoType,
   StatsArrType,
@@ -109,4 +111,15 @@ export type DeleteUserReqType = {
 export type StatsResponseType = {
   success: boolean;
   stats: StatsArrType;
+};
+
+// bar
+
+export type BarResponseType = {
+  success: boolean;
+  charts: ChartType;
+};
+export type PieResponseType = {
+  success: boolean;
+  charts: PieChartType;
 };
